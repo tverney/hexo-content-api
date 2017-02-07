@@ -1,0 +1,34 @@
+{
+  "name": "hexo-content-api",
+  "version": "1.0.0",
+  "description": "An Hexo.js module for content consumption from an API that provides posts, articles, and etc, from an JSON restful Service. Edit",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tverney/hexo-content-api.git"
+  },
+  "keywords": [
+    "hexo",
+    "api",
+    "content",
+    "static",
+    "site",
+    "generator",
+    "cms",
+    "consumption"
+  ],
+  "author": "Thiago Verney <thiago.verney@gmail.com> (http://thiagoverney.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tverney/hexo-content-api/issues"
+  },
+  "homepage": "https://github.com/tverney/hexo-content-api#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "hexo-cli": "^1.0.2",
+    "mocha": "^3.2.0"
+  }
+}
