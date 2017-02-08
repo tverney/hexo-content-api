@@ -1,6 +1,7 @@
 'use strict';
 
 var http = require('./http');
+var fs = require('fs');
 
 module.exports = function() {
 
@@ -41,14 +42,25 @@ module.exports = function() {
             });
     }
 
+    var listLocalPosts = function(hexo) {
+        return hexo.model('Post').sort('-date').toArray();
+    }
+
+    var removeAllLocalPosts = function(hexo, posts) {
+        posts.forEach(function (post) {
+            fs.unlinkSync(hexo.source_dir + post.source);
+        })
+    }
+
     var sync = function(hexo, config) {
+        removeAllLocalPosts(hexo, listLocalPosts(hexo));
         return getContent(config, "posts").then(function(data) {
-        	data.data.forEach(function (post) {
-        		var postInHexo = hexo.model('Post').get(post.id);
-        		if (!postInHexo) {
-        			createNewItem(hexo, post, "post");
-        		}
-        	});
+            return data.data.forEach(function(post) {
+                var postInHexo = hexo.model('Post').get(post.title);
+                if (!postInHexo) {
+                    createNewItem(hexo, post, "post");
+                }
+            });
         });
     }
 
