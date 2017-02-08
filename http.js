@@ -53,10 +53,7 @@ exports.get = function (url, headers, params) {
   setQueryStringValues(params, requestParams);
   return http(requestParams);
 };
-//url: https://api.netzei.com/admin-netzei
-//format: JSON
-//headers: [{key:'token',value:'123'}]
-//?
+
 exports.post = function (url, format, headers, params) {
   var requestParams = getRequestParams('POST', url, headers);
   setJsonValues(format, params, requestParams);
