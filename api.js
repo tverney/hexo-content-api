@@ -33,12 +33,9 @@ module.exports = function() {
                 console.error(err, err.stack)
                 return new Error("Failed to create page");
             })
-            .then(function(err, file) {
+            .then(function(file) {
                 var source = file.path.slice(hexo.source_dir.length);
-                return hexo.source.process([source]).then(function() {
-                    var page = hexo.model('Page').findOne({ source: source });
-                    return addIsDraft(page);
-                });
+                return hexo.source.process([source]);
             });
     }
 
@@ -56,7 +53,6 @@ module.exports = function() {
         removeAllLocalPosts(hexo, listLocalPosts(hexo));
         return getContent(config, "posts").then(function(data) {
             return data.data.forEach(function(post) {
-                var postInHexo = hexo.model('Post').get(post.title);
                 if (!postInHexo) {
                     createNewItem(hexo, post, "post");
                 }
