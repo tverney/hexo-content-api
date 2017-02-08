@@ -10,8 +10,6 @@ exports.sync = function (hexo) {
 		throw new Error("[Netzei CMS]: admin informations is required for authentication");
 	}
 
-	hexo.extend.filter.register('before_generate', function(app){
-		  console.log("Init sync with with your Netzei API:");
-		  api().sync(hexo, config);
-	});
+	console.log("Init sync with with your Netzei API:");
+	api().sync(hexo, config);
 }
