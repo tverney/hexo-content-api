@@ -50,13 +50,18 @@ module.exports = function() {
     }
 
     var sync = function(hexo, config) {
-        removeAllLocalPosts(hexo, listLocalPosts(hexo));
+        
         return getContent(config, "posts").then(function(data) {
-            return data.data.forEach(function(post) {
-                if (!postInHexo) {
-                    createNewItem(hexo, post, "post");
-                }
-            });
+            if (data.data.length) {
+                removeAllLocalPosts(hexo, listLocalPosts(hexo));
+                return data.data.forEach(function(post) {
+                    if (!postInHexo) {
+                        createNewItem(hexo, post, "post");
+                    }
+                });
+            } else {
+                console.info("There`s nothing to sync.")
+            }
         });
     }
 
