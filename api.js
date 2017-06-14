@@ -1,6 +1,7 @@
 'use strict';
 
 var http = require('./http');
+var constants = require('./constants');
 var fs = require('fs');
 
 module.exports = function() {
@@ -32,9 +33,21 @@ module.exports = function() {
         return post;
     }
 
+    var formatPost = function (post) {
+        var newPost = {};
+        post.itemModel.fields.forEach(function (field) {
+            if (field.fieldType.slug === constants.title) {
+                newPost.title = post.content[field.slug].data;
+            }
+            if (field.fieldType.slug === (constants.content[0] || constants.content[0])) {
+                newPost.content = post.content[field.slug].data;
+            }
+        }); 
+        return newPost; 
+    }
+
     var createNewItem = function(hexo, post, layout) {
-        post.layout = layout;
-        return hexo.post.create(post)
+        return hexo.post.create(formatPost(post))
             .error(function(err) {
                 return new Error("Failed to create page");
             })
@@ -66,17 +79,17 @@ module.exports = function() {
             var siteHash = data.data.hashid;
             return getContent('api/item?siteId='+siteHash, config, token).then(function(data) {
                 if (data.data.length) {
-                    console.log(data.data);
                     removeAllLocalPosts(hexo, listLocalPosts(hexo));
                     data.data = JSON.parse(data.data);
                     return data.data.forEach(function(post) {
-                        createNewItem(hexo, post, post.itemModel.name);
+                         createNewItem(hexo, post, post.itemModel.slug);
                     });
                 } else {
                     console.info("There`s nothing to sync.")
                 }
             });
-            return data;
+        }).catch(function (err) {
+            console.log(err);
         });
         
     }
