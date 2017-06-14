@@ -33,9 +33,9 @@ module.exports = function() {
     }
 
     var createNewItem = function(hexo, post, layout) {
-        return hexo.post.create({ title: post.title, layout: layout, date: new Date() })
+        post.layout = layout;
+        return hexo.post.create(post)
             .error(function(err) {
-                console.error(err, err.stack)
                 return new Error("Failed to create page");
             })
             .then(function(file) {
@@ -66,6 +66,7 @@ module.exports = function() {
             var siteHash = data.data.hashid;
             return getContent('api/item?siteId='+siteHash, config, token).then(function(data) {
                 if (data.data.length) {
+                    console.log(data.data);
                     removeAllLocalPosts(hexo, listLocalPosts(hexo));
                     data.data = JSON.parse(data.data);
                     return data.data.forEach(function(post) {

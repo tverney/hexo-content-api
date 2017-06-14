@@ -23,7 +23,7 @@ describe('#sync', function() {
     };
     hexo.config.netzei = netzei;
     return api().sync(hexo, hexo.config.netzei).then(function (data) {
-
+      
     });
   });
 
