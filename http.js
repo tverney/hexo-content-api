@@ -9,7 +9,7 @@ var http = function (requestParams) {
     if(!error && response.statusCode == 200) {
       defer.resolve({
         'response': response,
-        'data': JSON.parse(body)
+        'data': body
       });
     } else {
       defer.reject({
@@ -43,8 +43,8 @@ var setQueryStringValues = function(params, requestParams) {
   requestParams.qs = params;
 };
 
-var setJsonValues = function(format, params, requestParams) {
-  if (format !== 'JSON' || !params) return;
+var setJsonValues = function(params, requestParams) {
+  if (!params) return;
   requestParams.json = params;
 };
 
@@ -54,8 +54,8 @@ exports.get = function (url, headers, params) {
   return http(requestParams);
 };
 
-exports.post = function (url, format, headers, params) {
+exports.post = function (url, headers, params) {
   var requestParams = getRequestParams('POST', url, headers);
-  setJsonValues(format, params, requestParams);
+  setJsonValues(params, requestParams);
   return http(requestParams);
 };
