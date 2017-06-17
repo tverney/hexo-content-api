@@ -37,10 +37,10 @@ module.exports = function() {
         var newPost = {};
         post.itemModel.fields.forEach(function (field) {
             if (field.fieldType.slug === constants.title) {
-                newPost.title = post.content[field.slug].data;
+                newPost.title = post.content[field.slug].data || '';
             }
             if (field.fieldType.slug === (constants.content[0] || constants.content[0])) {
-                newPost.content = post.content[field.slug].data;
+                newPost.content = post.content[field.slug].data || '';
             }
         }); 
         return newPost; 
@@ -85,7 +85,7 @@ module.exports = function() {
                          createNewItem(hexo, post, post.itemModel.slug);
                     });
                 } else {
-                    console.info("There`s nothing to sync.")
+                    removeAllLocalPosts(hexo, listLocalPosts(hexo));
                 }
             });
         }).catch(function (err) {
