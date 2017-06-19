@@ -46,6 +46,7 @@ module.exports = function() {
                 newPost.featured_image = post.content[field.slug].data || '';
             }
         }); 
+        newPost.date = post.createDate;
         return newPost; 
     }
 
