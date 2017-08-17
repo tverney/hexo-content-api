@@ -11,6 +11,5 @@ exports.datetime = 'datetime';
 exports.number = ['number', 'floating-number'];
 exports.condicional = 'boolean';
 exports.slug =  'slug';
-exports.metatagTitle = 'seo-meta-tags_title';
-exports.metatagDescription = 'seo-meta-tags_description';
+exports.metatag = 'seo-meta-tags';
 exports.link = ['single-link', 'multiple-links'];

@@ -45,11 +45,9 @@ module.exports = function() {
             if (field.fieldType.slug === (constants.image)) {
                 newPost.featured_image = post.content[field.slug].data || '';
             }
-            if (field.fieldType.slug === (constants.metatagTitle)) {
-                newPost[constants.metatagTitle] = post.content[field.slug].data || '';
-            }
-            if (field.fieldType.slug === (constants.metatagDescription)) {
-                newPost[constants.metatagDescription] = post.content[field.slug].data || '';
+            if (field.fieldType.slug === (constants.metatag)) {
+                newPost[constants.metatag+'_title'] = post.content[field.slug+'_title'].data || '';
+                newPost[constants.metatag+'_description'] = post.content[field.slug+'_description'].data || '';
             }
         }); 
         newPost.date = post.createDate;
