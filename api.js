@@ -45,6 +45,12 @@ module.exports = function() {
             if (field.fieldType.slug === (constants.image)) {
                 newPost.featured_image = post.content[field.slug].data || '';
             }
+            if (field.fieldType.slug === (constants.metatagTitle)) {
+                newPost[constants.metatagTitle] = post.content[field.slug].data || '';
+            }
+            if (field.fieldType.slug === (constants.metatagDescription)) {
+                newPost[constants.metatagDescription] = post.content[field.slug].data || '';
+            }
         }); 
         newPost.date = post.createDate;
         return newPost; 
