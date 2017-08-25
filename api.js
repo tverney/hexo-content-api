@@ -45,6 +45,18 @@ module.exports = function() {
             if (field.fieldType.slug === (constants.image)) {
                 newPost.featured_image = post.content[field.slug].data || '';
             }
+            if (field.fieldType.slug === (constants.categories)) {
+                newPost.categories = [];
+                post.content[field.slug].data.forEach(function (category) {
+                    newPost.categories.push(category.text);
+                })    
+            }
+            if (field.fieldType.slug === (constants.tags)) {
+                newPost.tags = [];
+                post.content[field.slug].data.forEach(function (tag) {
+                    newPost.tags.push(tag.text);
+                })    
+            }
             if (field.fieldType.slug === (constants.metatag)) {
                 newPost[constants.metatag+'_title'] = post.content[field.slug+'_title'].data || '';
                 newPost[constants.metatag+'_description'] = post.content[field.slug+'_description'].data || '';
