@@ -48,6 +48,7 @@ module.exports = function() {
                 }
             }
             if (field.fieldType.slug === (constants.categories)) {
+                if (!post.content[field.slug]) return;
                 if (post.content[field.slug].data && post.content[field.slug].data.length) {
                     newPost.categories = [];
                     post.content[field.slug].data.forEach(function (category) {
@@ -56,6 +57,7 @@ module.exports = function() {
                 }
             }
             if (field.fieldType.slug === (constants.tags)) {
+                if (!post.content[field.slug]) return;
                 if (post.content[field.slug].data && post.content[field.slug].data.length) {
                     newPost.tags = [];
                     post.content[field.slug].data.forEach(function (tag) {
@@ -69,10 +71,14 @@ module.exports = function() {
             }
         }); 
         newPost.date = post.createDate;
+        newPost.slug = post.slug;
+        if (!post.itemModel.multiple) { 
+            newPost.layout = 'page';
+        }
         return newPost; 
     }
 
-    var createNewItem = function(hexo, post, layout) {
+    var createNewItem = function(hexo, post) {
         return hexo.post.create(formatPost(post))
             .error(function(err) {
                 return new Error("Failed to create page");
@@ -87,6 +93,10 @@ module.exports = function() {
       return hexo.model('Post').sort('-date').toArray(); 
     }
 
+    var listLocalPages = function(hexo) {
+      return hexo.model('Page').toArray(); 
+    }
+
     var auth = function (config) {
         var url = getUrl('auth/loginBySite', config.url);
         var headerWithToken = getHeaderToken('token', config.readApiToken);
@@ -99,6 +109,12 @@ module.exports = function() {
         })
     }
 
+    var removeAllLocalPages = function(hexo, pages) {
+        pages.forEach(function (page) {
+            fs.unlinkSync(hexo.source_dir + page.source);
+        })
+    }
+
     var sync = function(hexo, config) {
         return auth(config).then(function (data) {
             var token = data.data.token;
@@ -106,9 +122,10 @@ module.exports = function() {
             return getContent('api/item?siteId='+siteHash, config, token).then(function(data) {
                 if (data.data.length) {
                     removeAllLocalPosts(hexo, listLocalPosts(hexo));
+                    removeAllLocalPosts(hexo, listLocalPages(hexo));
                     data.data = JSON.parse(data.data);
                     return data.data.forEach(function(post) {
-                         createNewItem(hexo, post, post.itemModel.slug);
+                         createNewItem(hexo, post);
                     });
                 } else {
                     removeAllLocalPosts(hexo, listLocalPosts(hexo));
