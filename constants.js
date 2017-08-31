@@ -15,3 +15,4 @@ exports.metatag = 'seo_meta_tags';
 exports.link = ['single-link', 'multiple-links'];
 exports.tags = 'tags';
 exports.categories = 'categories';
+exports.summary = 'summary';
