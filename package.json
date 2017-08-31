@@ -1,6 +1,6 @@
 {
   "name": "hexo-content-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An Hexo.js module for content consumption from an API that provides posts, articles, and etc, from an JSON restful Service. Edit",
   "main": "index.js",
   "scripts": {
