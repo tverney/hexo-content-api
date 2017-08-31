@@ -42,6 +42,9 @@ module.exports = function() {
             if (field.fieldType.slug === (constants.content[0] || constants.content[0])) {
                 newPost.content = post.content[field.slug].data || '';
             }
+            if (field.fieldType.slug === (constants.summary)) {
+                newPost.summary = post.content[field.slug].data || '';
+            }
             if (field.fieldType.slug === (constants.image)) {
                 if (post.content[field.slug]) {
                     newPost.featured_image = post.content[field.slug].data || '';
