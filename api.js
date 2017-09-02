@@ -42,9 +42,6 @@ module.exports = function() {
             if (field.fieldType.slug === (constants.content[0] || constants.content[0])) {
                 newPost.content = post.content[field.slug].data || '';
             }
-            if (field.fieldType.slug === (constants.summary)) {
-                newPost.summary = post.content[field.slug].data || '';
-            }
             if (field.fieldType.slug === (constants.image)) {
                 if (post.content[field.slug]) {
                     newPost.featured_image = post.content[field.slug].data || '';
@@ -69,7 +66,9 @@ module.exports = function() {
                 }   
             }
             if (field.fieldType.slug === (constants.metatag)) {
+                if (!post.content[field.slug+'_title']) return;
                 newPost[constants.metatag+'_title'] = post.content[field.slug+'_title'].data || '';
+                if (!post.content[field.slug+'_description']) return;
                 newPost[constants.metatag+'_description'] = post.content[field.slug+'_description'].data || '';
             }
         }); 
@@ -107,9 +106,11 @@ module.exports = function() {
     }
 
     var removeAllLocalPosts = function(hexo, posts) {
-        posts.forEach(function (post) {
-            fs.unlinkSync(hexo.source_dir + post.source);
-        })
+        if (posts.length) {
+            posts.forEach(function (post) {
+                fs.unlinkSync(hexo.source_dir + post.source);
+            })  
+        }
     }
 
     var removeAllLocalPages = function(hexo, pages) {
