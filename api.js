@@ -42,6 +42,9 @@ module.exports = function() {
             if (field.fieldType.slug === (constants.content[0] || constants.content[0])) {
                 newPost.content = post.content[field.slug].data || '';
             }
+            if (field.fieldType.slug === (constants.summary)) {
+                newPost.summary = post.content[field.slug].data || '';
+            }
             if (field.fieldType.slug === (constants.image)) {
                 if (post.content[field.slug]) {
                     newPost.featured_image = post.content[field.slug].data || '';
@@ -66,14 +69,15 @@ module.exports = function() {
                 }   
             }
             if (field.fieldType.slug === (constants.metatag)) {
-                if (!post.content[field.slug+'_title']) return;
                 newPost[constants.metatag+'_title'] = post.content[field.slug+'_title'].data || '';
-                if (!post.content[field.slug+'_description']) return;
                 newPost[constants.metatag+'_description'] = post.content[field.slug+'_description'].data || '';
             }
         }); 
         newPost.date = post.createDate;
         newPost.slug = post.slug;
+        if (post.itemModel.themeLayout) {
+            newPost.selected_layout = post.itemModel.themeLayout.archive_name;
+        }
         if (!post.itemModel.multiple) { 
             newPost.layout = 'page';
         }
@@ -106,11 +110,9 @@ module.exports = function() {
     }
 
     var removeAllLocalPosts = function(hexo, posts) {
-        if (posts.length) {
-            posts.forEach(function (post) {
-                fs.unlinkSync(hexo.source_dir + post.source);
-            })  
-        }
+        posts.forEach(function (post) {
+            fs.unlinkSync(hexo.source_dir + post.source);
+        })
     }
 
     var removeAllLocalPages = function(hexo, pages) {
@@ -119,36 +121,10 @@ module.exports = function() {
         })
     }
 
-    var updateConfig = function (oldConfigData, newConfigData) {
-        oldConfigData.title = newConfigData.metaTitle;
-        oldConfigData.subtitle = newConfigData.metaSuffix;
-        oldConfigData.description = newConfigData.metaDescription;
-        oldConfigData.url = newConfigData.frontendUrl;
-        oldConfigData.google_analytics = newConfigData.metaAnalyticsAccount;
-        oldConfigData.language = newConfigData.language;
-        oldConfigData.no_index = newConfigData.metaNoIndex;
-        oldConfigData.facebook_pixel = newConfigData.metaFacebookPixel;
-        oldConfigData.twitter_account = newConfigData.metaTwitterAccount;
-        oldConfigData.facebook_account = newConfigData.metaFacebookAccount;
-        return oldConfigData;
-    }
-
-    var updateConfigFile = function (hexo, config, siteHash, token) {
-        hexo.render.render({path: '_config.yml'}).then(function(result){
-            getContent('api/site/'+siteHash+'/single', config, token).then(function(data) {
-                var configFromServer = JSON.parse(data.data);
-                var newConfig = updateConfig(result, configFromServer);
-                fs.unlinkSync('_config.yml');
-                fs.writeFile('_config.yml', JSON.stringify(newConfig), ['UTF-8']);
-            });
-        });
-    }
-
     var sync = function(hexo, config) {
         return auth(config).then(function (data) {
             var token = data.data.token;
             var siteHash = data.data.hashid;
-            updateConfigFile(hexo, config, siteHash, token);
             return getContent('api/item?siteId='+siteHash, config, token).then(function(data) {
                 if (data.data.length) {
                     removeAllLocalPosts(hexo, listLocalPosts(hexo));
